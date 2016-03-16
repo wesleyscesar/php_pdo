@@ -1,6 +1,13 @@
 create database pdo_bd;
 
 use pdo_bd;
+create table usuarios(
+	id int(5) auto_increment primary key,
+	login varchar(50),
+	senha varchar(20)
+);
+
+insert into alunos (login,senha) values('admin','admin');
 
 create table alunos(
 	id int(5) auto_increment primary key,
