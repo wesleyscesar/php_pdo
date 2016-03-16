@@ -23,7 +23,7 @@ class Crud
             echo '<tr cellspacing="2" cellpadding="0" style="font-size: 13px;">';
             echo '<td align="center">' . $item["nome"] . '</td>';
             echo '<td align="center">' . $item["nota"] . '</td>';
-            echo '<td align="center"><a href="form.php?id=' . $item["id"] . '">Editar</a></td>';
+            echo '<td align="center"><a href="form_alunos.php?id=' . $item["id"] . '">Editar</a></td>';
             echo '<td align="center"><a href="index.php?id=' . $item["id"] . '">Excluir</a></td>';
             echo '</tr>';
         }
@@ -33,7 +33,6 @@ class Crud
 	public function inserir()
 	{
 		$query = "Insert into alunos(nome,nota) values(:nome, :nota)";
-
         $stmt = $this->db->prepare($query);
 		$stmt->bindValue(':nome', $this->getNome());
 		$stmt->bindValue(':nota', $this->getNota());
@@ -75,6 +74,22 @@ class Crud
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
 
+    }
+
+    public function pesqAluno($nome){
+        $query = "SELECT * FROM alunos WHERE nome = :nome";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':nome', $nome, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $item = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        echo '<tr cellspacing="2" cellpadding="0" style="font-size: 13px;">';
+        echo '<td align="center">' . $item['nome'] . '</td>';
+        echo '<td align="center">' . $item['nota'] . '</td>';
+        echo '<td align="center"><a href="form_alunos.php?id=' . $item['id'] . '">Editar</a></td>';
+        echo '<td align="center"><a href="index.php?id=' . $item['id'] . '">Excluir</a></td>';
+        echo '</tr>';
     }
 
 

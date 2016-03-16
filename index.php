@@ -1,26 +1,19 @@
-<?php 
+<?php
 
+require_once 'conexao.php';
 require_once 'Crud.php';
-
-try{
-    $conn = new \PDO("mysql:host=localhost;dbname=pdo_bd","root","t2ic0l02"); // CONEXÃO COM O BD
-} catch (\PDOException $e) {
-	die("não foi possivel estabelecer a conexão");
-}
 
 $Id = isset($_GET['id'])?$_GET['id']:'';
 
 $IdAluno = isset($_POST['idaluno'])?$_POST['idaluno']:'';
 
+$tbNome = isset($_POST['tbNome'])?$_POST['tbNome']:'';
+
 $crud = new Crud($conn);
 
 if($_SERVER["REQUEST_METHOD"] == "POST") {
 
-	if($IdAluno != ""){ // FUNÇÃO PARA EXCLUIR O ALUNO
-	}
-
 } else {
-
 	if($Id != ""){
 		$crud->deletar($Id);
 	}
@@ -31,6 +24,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 
 	<input id="idaluno" name="idaluno" type="hidden" value="<?php echo $Id ?>" />
 
+	Nome: <input id="tbNome" name="tbNome" type="text" value="<?php echo $tbNome ?>" />
+
+    <input type="submit" border="0" value=" Pesquisar " style="margin-top: 17px;"/>
 	<table width="100%" cellspacing="2" cellpadding="0" style="font-size: 14px;">
 		<thead>
 			<tr>
@@ -41,7 +37,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 			</tr>
 			<tbody>
 			<?php
-				$crud->listar();
+                if($tbNome != "") {
+                    $crud->pesqAluno($tbNome);
+                } else {
+                    $crud->listar();
+                }
 			?>
 			</tbody>
 		</thead>
@@ -49,7 +49,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 
 	<table width="100%" cellspacing="10" cellpadding="0" style="font-size: 20px;">
 		<tr>
-			<td align="right"><a href="form.php">Novo Aluno</a></td>
+			<td align="right"><a href="form_alunos.php">Novo Aluno</a></td>
 		</tr>
 	</table>
 </form>
