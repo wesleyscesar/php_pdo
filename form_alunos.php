@@ -1,46 +1,56 @@
 <?php
-require_once 'conexao.php';
-require_once 'Crud.php';
 
-$crud = new Crud($conn);
+session_start();
 
-$Id = isset($_GET['id'])?$_GET['id']:'';
+if($_SESSION['autenticacao'] > 0) {
 
-$tbIdAluno = isset($_POST['idaluno'])?$_POST['idaluno']:'';
-$tbNome = isset($_POST['tbNome'])?$_POST['tbNome']:'';
-$tbNota = isset($_POST['tbNota'])?$_POST['tbNota']:'';
+    require_once 'conexao.php';
+    require_once 'Crud.php';
 
-if($_SERVER["REQUEST_METHOD"] == "POST") {
+    $crud = new Crud($conn);
 
-    if($tbIdAluno > 0){ // ALTERA ALUNO
+    $Id = isset($_GET['id']) ? $_GET['id'] : '';
 
-        $crud->setNome($tbNome);
-        $crud->setNota($tbNota);
+    $tbIdAluno = isset($_POST['idaluno']) ? $_POST['idaluno'] : '';
+    $tbNome = isset($_POST['tbNome']) ? $_POST['tbNome'] : '';
+    $tbNota = isset($_POST['tbNota']) ? $_POST['tbNota'] : '';
 
-        if($crud->alterar($tbIdAluno)) header("location: index.php");
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    } else { // INSERE ALUNO
+        if ($tbIdAluno > 0) { // ALTERA ALUNO
 
-        $crud->setNome($tbNome);
-        $crud->setNota($tbNota);
+            $crud->setNome($tbNome);
+            $crud->setNota($tbNota);
 
-        if($crud->inserir()) header("location: index.php");
+            if ($crud->alterar($tbIdAluno)) header("location: list_aluno.php");
+
+        } else { // INSERE ALUNO
+
+            $crud->setNome($tbNome);
+            $crud->setNota($tbNota);
+
+            if ($crud->inserir()) header("location: list_aluno.php");
+
+        }
+
+    } else {
+
+        if ($Id != "") {
+            $result = $crud->find($Id);
+
+            $tbNome = $result['nome'];
+            $tbNota = $result['nota'];
+
+        }
 
     }
 
 } else {
-
-    if($Id != ""){
-        $result = $crud->find($Id);
-
-        $tbNome = $result['nome'];
-        $tbNota = $result['nota'];
-
-    }
-
+    echo "logue no sistema";
 }
 ?>
 
+<?php if($_SESSION['autenticacao'] > 0){ ?>
 <form action="" method="post">
 
     <input id="idaluno" name="idaluno" type="hidden" value="<?php echo $Id;?>" />
@@ -65,3 +75,4 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     </table>
 
 </form>
+<?php } ?>
